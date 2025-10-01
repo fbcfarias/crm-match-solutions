@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, TrendingUp, MessageSquare, Target } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useAuth } from "@/hooks/useAuth";
+import { StatusAgenteIA } from "@/components/agente-ia/StatusAgenteIA";
+import { LeadsQualificadosPanel } from "@/components/agente-ia/LeadsQualificadosPanel";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -115,28 +117,13 @@ const Dashboard = () => {
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Próximas Ações</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <p>Nenhuma ação pendente no momento</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Campanhas Recentes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-center py-8 text-muted-foreground">
-                <p>Nenhuma campanha criada ainda</p>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <LeadsQualificadosPanel />
+          </div>
+          <div>
+            <StatusAgenteIA />
+          </div>
         </div>
       </div>
     </Layout>

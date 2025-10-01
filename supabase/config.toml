@@ -1,1 +1,10 @@
 project_id = "zmdavnuzqltlxrbczosn"
+
+[functions.gerar-agente-personalizado]
+verify_jwt = false
+
+[functions.processar-mensagem-ia]
+verify_jwt = false
+
+[functions.webhook-whatsapp]
+verify_jwt = false

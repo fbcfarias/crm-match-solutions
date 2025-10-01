@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      agentes_ia: {
+        Row: {
+          ativo: boolean | null
+          configuracoes: Json | null
+          created_at: string
+          id: string
+          prompt_personalizado: string
+          updated_at: string
+          vendedor_id: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          configuracoes?: Json | null
+          created_at?: string
+          id?: string
+          prompt_personalizado: string
+          updated_at?: string
+          vendedor_id: string
+        }
+        Update: {
+          ativo?: boolean | null
+          configuracoes?: Json | null
+          created_at?: string
+          id?: string
+          prompt_personalizado?: string
+          updated_at?: string
+          vendedor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agentes_ia_vendedor_id_fkey"
+            columns: ["vendedor_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       campanhas: {
         Row: {
           agendamento: string | null
@@ -98,6 +136,57 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "conversas_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversas_ia: {
+        Row: {
+          agente_id: string
+          created_at: string
+          id: string
+          lead_id: string
+          mensagem: string
+          metadata: Json | null
+          score_qualificacao: number | null
+          tipo: string
+          transferido: boolean | null
+        }
+        Insert: {
+          agente_id: string
+          created_at?: string
+          id?: string
+          lead_id: string
+          mensagem: string
+          metadata?: Json | null
+          score_qualificacao?: number | null
+          tipo: string
+          transferido?: boolean | null
+        }
+        Update: {
+          agente_id?: string
+          created_at?: string
+          id?: string
+          lead_id?: string
+          mensagem?: string
+          metadata?: Json | null
+          score_qualificacao?: number | null
+          tipo?: string
+          transferido?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversas_ia_agente_id_fkey"
+            columns: ["agente_id"]
+            isOneToOne: false
+            referencedRelation: "agentes_ia"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversas_ia_lead_id_fkey"
             columns: ["lead_id"]
             isOneToOne: false
             referencedRelation: "leads"
@@ -204,10 +293,13 @@ export type Database = {
       }
       profiles: {
         Row: {
+          agente_ativo: boolean | null
           avatar_url: string | null
           carteira: Database["public"]["Enums"]["carteira_type"] | null
+          contexto_agente_ia: string | null
           created_at: string | null
           email: string
+          estilo_comunicacao: string | null
           id: string
           nome: string
           role: Database["public"]["Enums"]["user_role"] | null
@@ -216,10 +308,13 @@ export type Database = {
           whatsapp_number: string | null
         }
         Insert: {
+          agente_ativo?: boolean | null
           avatar_url?: string | null
           carteira?: Database["public"]["Enums"]["carteira_type"] | null
+          contexto_agente_ia?: string | null
           created_at?: string | null
           email: string
+          estilo_comunicacao?: string | null
           id?: string
           nome: string
           role?: Database["public"]["Enums"]["user_role"] | null
@@ -228,10 +323,13 @@ export type Database = {
           whatsapp_number?: string | null
         }
         Update: {
+          agente_ativo?: boolean | null
           avatar_url?: string | null
           carteira?: Database["public"]["Enums"]["carteira_type"] | null
+          contexto_agente_ia?: string | null
           created_at?: string | null
           email?: string
+          estilo_comunicacao?: string | null
           id?: string
           nome?: string
           role?: Database["public"]["Enums"]["user_role"] | null
@@ -240,6 +338,50 @@ export type Database = {
           whatsapp_number?: string | null
         }
         Relationships: []
+      }
+      qualificacao_leads: {
+        Row: {
+          created_at: string
+          criterios_atendidos: Json | null
+          id: string
+          lead_id: string
+          motivo_transferencia: string | null
+          score_atual: number | null
+          status_qualificacao: string | null
+          transferido_em: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          criterios_atendidos?: Json | null
+          id?: string
+          lead_id: string
+          motivo_transferencia?: string | null
+          score_atual?: number | null
+          status_qualificacao?: string | null
+          transferido_em?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          criterios_atendidos?: Json | null
+          id?: string
+          lead_id?: string
+          motivo_transferencia?: string | null
+          score_atual?: number | null
+          status_qualificacao?: string | null
+          transferido_em?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qualificacao_leads_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: true
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
