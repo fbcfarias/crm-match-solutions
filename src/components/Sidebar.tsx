@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { 
   LayoutDashboard, 
   Users, 
@@ -38,6 +38,7 @@ export function Sidebar() {
   const { signOut, user } = useAuth();
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+  const location = useLocation();
 
   return (
     <SidebarComponent collapsible="icon">
@@ -60,24 +61,23 @@ export function Sidebar() {
           <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="hover:!bg-transparent hover:!text-inherit">
-                    <NavLink
-                      to={item.url}
-                      end
-                      className={({ isActive }) =>
-                        isActive
-                          ? "!bg-primary !text-primary-foreground font-medium hover:!bg-primary hover:!text-primary-foreground"
-                          : "text-sidebar-foreground"
-                      }
+              {menuItems.map((item) => {
+                const active = location.pathname === item.url;
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={active}
+                      className="text-sidebar-foreground hover:!bg-transparent hover:!text-inherit data-[active=true]:!bg-primary data-[active=true]:!text-primary-foreground"
                     >
-                      <item.icon className="w-4 h-4" />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+                      <NavLink to={item.url} end className="flex items-center gap-2">
+                        <item.icon className="w-4 h-4" />
+                        {!collapsed && <span>{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
