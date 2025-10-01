@@ -67,8 +67,8 @@ export function Sidebar() {
                       to={item.url}
                       className={({ isActive }) =>
                         isActive
-                          ? "bg-primary text-primary-foreground font-medium"
-                          : "hover:bg-accent"
+                          ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium"
+                          : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                       }
                     >
                       <item.icon className="w-4 h-4" />
