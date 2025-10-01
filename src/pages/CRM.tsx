@@ -7,43 +7,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Search, Plus, Phone, Mail, MessageSquare, Star } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useLeads } from "@/hooks/useLeads";
+import { NovoLeadModal } from "@/components/crm/NovoLeadModal";
 
 const CRM = () => {
-  const { user } = useAuth();
-  const [leads, setLeads] = useState<any[]>([]);
+  const { leads, loading } = useLeads();
   const [filteredLeads, setFilteredLeads] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("todos");
-
-  useEffect(() => {
-    fetchLeads();
-  }, [user]);
+  const [isNovoLeadModalOpen, setIsNovoLeadModalOpen] = useState(false);
 
   useEffect(() => {
     filterLeads();
   }, [leads, searchTerm, statusFilter]);
-
-  const fetchLeads = async () => {
-    if (!user) return;
-
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("user_id", user.id)
-      .single();
-
-    if (!profile) return;
-
-    const { data } = await supabase
-      .from("leads")
-      .select("*")
-      .eq("vendedor_id", profile.id)
-      .order("created_at", { ascending: false });
-
-    setLeads(data || []);
-  };
 
   const filterLeads = () => {
     let filtered = leads;
@@ -117,7 +93,7 @@ const CRM = () => {
             <h1 className="text-4xl font-bold text-foreground mb-2">CRM - Gestão de Leads</h1>
             <p className="text-muted-foreground">Acompanhe e gerencie seus leads</p>
           </div>
-          <Button size="lg" className="gap-2">
+          <Button size="lg" className="gap-2" onClick={() => setIsNovoLeadModalOpen(true)}>
             <Plus className="w-5 h-5" />
             NOVO LEAD
           </Button>
@@ -229,6 +205,11 @@ const CRM = () => {
           </Card>
         )}
       </div>
+
+      <NovoLeadModal 
+        open={isNovoLeadModalOpen} 
+        onOpenChange={setIsNovoLeadModalOpen}
+      />
     </Layout>
   );
 };

@@ -65,15 +65,18 @@ export const useLeads = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Usuário não autenticado');
 
-      const { data: profile } = await supabase
+      const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('id')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
+
+      if (profileError) throw profileError;
+      if (!profile) throw new Error('Profile não encontrado');
 
       const { data, error } = await supabase
         .from('leads')
-        .insert([{ ...leadData, vendedor_id: profile?.id } as any])
+        .insert([{ ...leadData, vendedor_id: profile.id } as any])
         .select()
         .single();
 
