@@ -9,6 +9,7 @@ import {
   Building2
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserRole } from "@/hooks/useUserRole";
 import {
   Sidebar as SidebarComponent,
   SidebarContent,
@@ -26,19 +27,51 @@ import {
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
-const menuItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
-  { title: "CRM - Leads", url: "/crm", icon: Users },
-  { title: "Campanhas", url: "/campanhas", icon: Send },
-  { title: "Chat", url: "/chat", icon: MessageSquare },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
-];
-
 export function Sidebar() {
   const { signOut, user } = useAuth();
+  const { role, isAdmin } = useUserRole();
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
+
+  const menuItems = [
+    { 
+      title: "Dashboard", 
+      url: isAdmin ? "/admin/dashboard" : "/dashboard", 
+      icon: LayoutDashboard,
+      showFor: ["admin", "vendedor"]
+    },
+    { 
+      title: "CRM - Leads", 
+      url: "/crm", 
+      icon: Users,
+      showFor: ["vendedor"]
+    },
+    { 
+      title: "Campanhas", 
+      url: "/campanhas", 
+      icon: Send,
+      showFor: ["admin"]
+    },
+    { 
+      title: "Chat", 
+      url: "/chat", 
+      icon: MessageSquare,
+      showFor: ["vendedor"]
+    },
+    { 
+      title: "Analytics", 
+      url: "/analytics", 
+      icon: BarChart3,
+      showFor: ["admin", "vendedor"]
+    },
+  ];
+
+  const visibleMenuItems = menuItems.filter(item => 
+    role && item.showFor.includes(role)
+  );
+
+  const roleLabel = isAdmin ? "Administrador" : "Vendedor";
 
   return (
     <SidebarComponent collapsible="icon">
@@ -61,7 +94,7 @@ export function Sidebar() {
           <SidebarGroupLabel>Menu Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => {
+              {visibleMenuItems.map((item) => {
                 const active = location.pathname === item.url;
                 return (
                   <SidebarMenuItem key={item.title}>
@@ -94,7 +127,7 @@ export function Sidebar() {
               </Avatar>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium truncate">{user?.email}</p>
-                <p className="text-xs text-muted-foreground">Vendedor</p>
+                <p className="text-xs text-muted-foreground">{roleLabel}</p>
               </div>
             </div>
           )}

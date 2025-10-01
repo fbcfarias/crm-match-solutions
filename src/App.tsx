@@ -7,6 +7,9 @@ import { AuthProvider } from "@/providers/AuthProvider";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import AdminDashboard from "./pages/AdminDashboard";
+import VendedorRegister from "./pages/VendedorRegister";
+import AdminRegister from "./pages/AdminRegister";
 import CRM from "./pages/CRM";
 import Campanhas from "./pages/Campanhas";
 import Chat from "./pages/Chat";
@@ -25,6 +28,9 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/register/vendedor" element={<VendedorRegister />} />
+            <Route path="/register/admin" element={<AdminRegister />} />
+            
             <Route
               path="/dashboard"
               element={
@@ -33,6 +39,16 @@ const App = () => (
                 </ProtectedRoute>
               }
             />
+            
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute requireAdmin>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            
             <Route
               path="/crm"
               element={
@@ -44,7 +60,7 @@ const App = () => (
             <Route
               path="/campanhas"
               element={
-                <ProtectedRoute>
+                <ProtectedRoute requireAdmin>
                   <Campanhas />
                 </ProtectedRoute>
               }
