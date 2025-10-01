@@ -62,13 +62,14 @@ export function Sidebar() {
             <SidebarMenu>
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild className="hover:!bg-transparent hover:!text-inherit">
                     <NavLink
                       to={item.url}
+                      end
                       className={({ isActive }) =>
                         isActive
                           ? "!bg-primary !text-primary-foreground font-medium hover:!bg-primary hover:!text-primary-foreground"
-                          : ""
+                          : "text-sidebar-foreground"
                       }
                     >
                       <item.icon className="w-4 h-4" />
