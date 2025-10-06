@@ -25,9 +25,9 @@ const AdminDashboard = () => {
 
   const fetchAdminStats = async () => {
     try {
-      // Fetch total vendedores
+      // Fetch total vendedores (usar user_roles SEGURO)
       const { count: vendedoresCount } = await supabase
-        .from('profiles')
+        .from('user_roles')
         .select('*', { count: 'exact', head: true })
         .eq('role', 'vendedor');
 

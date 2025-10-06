@@ -50,6 +50,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "agentes_ia_vendedor_id_fkey"
+            columns: ["vendedor_id"]
+            isOneToOne: true
+            referencedRelation: "profiles_with_roles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       campanhas: {
@@ -101,6 +108,13 @@ export type Database = {
             columns: ["criado_por"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campanhas_criado_por_fkey"
+            columns: ["criado_por"]
+            isOneToOne: false
+            referencedRelation: "profiles_with_roles"
             referencedColumns: ["id"]
           },
         ]
@@ -251,6 +265,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "leads_vendedor_id_fkey"
+            columns: ["vendedor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_with_roles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       metricas: {
@@ -289,6 +310,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "metricas_vendedor_id_fkey"
+            columns: ["vendedor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles_with_roles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       profiles: {
@@ -302,7 +330,6 @@ export type Database = {
           estilo_comunicacao: string | null
           id: string
           nome: string
-          role: Database["public"]["Enums"]["user_role"] | null
           updated_at: string | null
           user_id: string
           whatsapp_number: string | null
@@ -317,7 +344,6 @@ export type Database = {
           estilo_comunicacao?: string | null
           id?: string
           nome: string
-          role?: Database["public"]["Enums"]["user_role"] | null
           updated_at?: string | null
           user_id: string
           whatsapp_number?: string | null
@@ -332,7 +358,6 @@ export type Database = {
           estilo_comunicacao?: string | null
           id?: string
           nome?: string
-          role?: Database["public"]["Enums"]["user_role"] | null
           updated_at?: string | null
           user_id?: string
           whatsapp_number?: string | null
@@ -383,14 +408,67 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      profiles_with_roles: {
+        Row: {
+          agente_ativo: boolean | null
+          avatar_url: string | null
+          carteira: Database["public"]["Enums"]["carteira_type"] | null
+          contexto_agente_ia: string | null
+          created_at: string | null
+          email: string | null
+          estilo_comunicacao: string | null
+          id: string | null
+          nome: string | null
+          role: Database["public"]["Enums"]["app_role"] | null
+          updated_at: string | null
+          user_id: string | null
+          whatsapp_number: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { _user_id: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      is_admin: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
+      app_role: "admin" | "vendedor" | "agente"
       campanha_status:
         | "rascunho"
         | "agendada"
@@ -534,6 +612,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      app_role: ["admin", "vendedor", "agente"],
       campanha_status: [
         "rascunho",
         "agendada",
